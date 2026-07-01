@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zeiterfassung</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🕒 Zeiterfassung</h1>
+
+    <div class="card">
+        <label>Mitarbeiter</label>
+        <input type="text" id="name" placeholder="Name eingeben">
+    </div>
+
+    <div class="info">
+        <div id="datum"></div>
+        <div id="uhr"></div>
+    </div>
+
+    <button class="kommen" onclick="stempeln('🟢 Kommen')">
+        🟢 KOMMEN
+    </button>
+
+    <button class="pauseStart" onclick="stempeln('☕ Pause Start')">
+        ☕ PAUSE START
+    </button>
+
+    <button class="pauseEnde" onclick="stempeln('▶️ Pause Ende')">
+        ▶️ PAUSE ENDE
+    </button>
+
+    <button class="gehen" onclick="stempeln('🔴 Gehen')">
+        🔴 GEHEN
+    </button>
+
+    <hr>
+
+    <h2>Historie</h2>
+
+    <ul id="historie"></ul>
+
+    <hr>
+
+    <button class="teilen" onclick="teilen()">
+        📤 Bericht teilen
+    </button>
+
+    <button class="screenshot" onclick="window.print()">
+        📷 Screenshot / Drucken
+    </button>
+
+    <button class="neu" onclick="neuerTag()">
+        🗑 Neuer Tag
+    </button>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
