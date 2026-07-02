@@ -1,12 +1,17 @@
+/* ===========================
+   Zeiterfassung
+=========================== */
+
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial,Helvetica,sans-serif;
+    font-family:Arial, Helvetica, sans-serif;
 }
 
 body{
-    background:linear-gradient(180deg,#0d2b63,#0a2555);
+    background:linear-gradient(180deg,#0d2b63,#0b2554);
+    min-height:100vh;
     padding:20px;
 }
 
@@ -15,197 +20,328 @@ body{
     margin:auto;
 }
 
-/* ---------- Kopf ---------- */
+/* ===========================
+   Titel
+=========================== */
 
 .header{
-    color:white;
     margin-bottom:20px;
 }
 
 .header h1{
-    font-size:52px;
+    color:white;
+    font-size:48px;
     font-weight:700;
 }
 
-.header p{
-    font-size:22px;
-    opacity:.9;
-    margin-top:5px;
-}
-
-/* ---------- Karten ---------- */
+/* ===========================
+   Karten
+=========================== */
 
 .card{
+
     background:white;
-    border-radius:30px;
+
+    border-radius:28px;
+
     padding:25px;
-    margin-bottom:22px;
-    box-shadow:0 10px 30px rgba(0,0,0,.18);
+
+    margin-bottom:20px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+
 }
 
-/* ---------- Mitarbeiter ---------- */
+/* ===========================
+   Mitarbeiter
+=========================== */
 
 label{
+
+    display:block;
+
     color:#1565c0;
+
     font-size:18px;
+
     font-weight:bold;
+
+    margin-bottom:15px;
+
 }
 
 input{
+
     width:100%;
+
     border:none;
+
     border-bottom:2px solid #ddd;
-    font-size:24px;
-    padding:15px 5px;
+
+    font-size:22px;
+
+    padding:12px 5px;
+
     outline:none;
+
 }
 
-/* ---------- Datum / Uhr ---------- */
+/* ===========================
+   Datum / Uhr
+=========================== */
 
 .zeitkarte{
+
     display:grid;
+
     grid-template-columns:1fr 1px 1fr;
-    align-items:center;
+
     gap:20px;
+
+    align-items:center;
+
 }
 
 .trennlinie{
+
     width:1px;
-    background:#e5e5e5;
+
     height:120px;
+
+    background:#e5e5e5;
+
 }
 
 .titel{
+
     color:#1565c0;
+
     font-size:18px;
+
     font-weight:bold;
+
     margin-bottom:12px;
+
 }
 
 #datum{
-    font-size:26px;
-    font-weight:bold;
-}
 
-#uhr{
-    font-size:58px;
+    font-size:22px;
+
     font-weight:bold;
+
 }
 
 small{
-    color:#777;
-    font-size:14px;
+
+    color:#666;
+
+    display:block;
+
+    margin-top:10px;
+
 }
 
-/* ---------- Buttons ---------- */
+#uhr{
+
+    font-size:56px;
+
+    font-weight:bold;
+
+}
+
+/* ===========================
+   Buttons
+=========================== */
 
 .buttons{
+
     display:grid;
+
     grid-template-columns:1fr 1fr;
+
     gap:18px;
-    margin-bottom:22px;
+
+    margin-bottom:20px;
+
 }
 
 button{
-    height:120px;
+
     border:none;
+
     border-radius:22px;
+
+    height:110px;
+
     color:white;
+
     font-size:18px;
+
     font-weight:bold;
+
     cursor:pointer;
+
     transition:.2s;
-    box-shadow:0 8px 20px rgba(0,0,0,.18);
+
+    box-shadow:0 8px 18px rgba(0,0,0,.20);
+
+}
+
+button:hover{
+
+    opacity:.95;
+
 }
 
 button:active{
-    transform:scale(.97);
+
+    transform:scale(.98);
+
 }
 
 .kommen{
-    background:#2dbb42;
+
+    background:#29b83e;
+
 }
 
 .gehen{
-    background:#ef3434;
+
+    background:#ef3333;
+
 }
 
 .pauseStart{
+
     background:#ff9800;
+
 }
 
 .pauseEnde{
-    background:#2f8df7;
+
+    background:#2b8df8;
+
 }
 
 .teilen{
+
     background:#00a79d;
+
 }
 
 .neu{
-    background:#7b1fd1;
+
+    background:#7a21d2;
+
 }
 
-/* ---------- Historie ---------- */
+/* deaktivierte Buttons */
+
+button:disabled{
+
+    background:#bcbcbc !important;
+
+    color:#ececec;
+
+    cursor:not-allowed;
+
+    box-shadow:none;
+
+}
+
+/* ===========================
+   Historie
+=========================== */
 
 h2{
-    font-size:28px;
+
+    font-size:24px;
+
     margin-bottom:20px;
+
 }
 
 #historie{
+
     list-style:none;
+
 }
 
 #historie li{
-    padding:16px 0;
+
+    padding:15px 0;
+
     border-bottom:1px solid #ececec;
+
     font-size:20px;
+
 }
 
-/* ---------- Arbeitszeit ---------- */
+/* ===========================
+   Arbeitszeit
+=========================== */
 
 #gesamtzeit{
+
     text-align:center;
+
     font-size:72px;
-    font-weight:bold;
+
     color:#1565c0;
+
+    font-weight:bold;
+
     margin-top:20px;
+
 }
 
 .stunden{
+
     text-align:center;
+
     color:#666;
+
     margin-top:8px;
+
 }
 
-/* ---------- Handy ---------- */
+/* ===========================
+   Handy
+=========================== */
 
 @media(max-width:480px){
 
 .header h1{
+
 font-size:40px;
-}
 
-.header p{
-font-size:18px;
-}
-
-#uhr{
-font-size:46px;
-}
-
-#datum{
-font-size:22px;
 }
 
 button{
-height:100px;
+
+height:95px;
+
 font-size:16px;
+
+}
+
+#uhr{
+
+font-size:44px;
+
+}
+
+#datum{
+
+font-size:20px;
+
 }
 
 .card{
+
 padding:20px;
+
 }
 
 }
