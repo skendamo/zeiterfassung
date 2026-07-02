@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Zeiterfassung</title>
-    
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1b1b1b">
-    
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0b4ea2">
+
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -15,61 +16,159 @@
 
 <div class="container">
 
-    <h1>🕒 Zeiterfassung</h1>
+    <!-- Kopf -->
+    <div class="header">
+
+        <div class="logo">🕒</div>
+
+        <div>
+            <h1>Zeiterfassung</h1>
+            <p>Einfach. Schnell. Übersichtlich.</p>
+        </div>
+
+    </div>
+
+
+    <!-- Mitarbeiter -->
 
     <div class="card">
+
         <label>Mitarbeiter</label>
-        <input type="text" id="name" placeholder="Name eingeben">
+
+        <input
+            id="name"
+            type="text"
+            placeholder="Name eingeben">
+
     </div>
 
-    <div class="info">
-        <div id="datum"></div>
-        <div id="uhr"></div>
+
+    <!-- Datum / Uhr -->
+
+    <div class="card info">
+
+        <div class="left">
+
+            <div class="titel">📅 Datum</div>
+
+            <div id="datum"></div>
+
+            <small>Europe/Zurich</small>
+
+        </div>
+
+        <div class="right">
+
+            <div class="titel">🕒 Uhrzeit</div>
+
+            <div id="uhr"></div>
+
+        </div>
+
     </div>
 
-    <button class="kommen" onclick="stempeln('🟢 Kommen')">
-        🟢 KOMMEN
-    </button>
 
-    <button class="pauseStart" onclick="stempeln('☕ Pause Start')">
-        ☕ PAUSE START
-    </button>
+    <!-- Buttons -->
 
-    <button class="pauseEnde" onclick="stempeln('▶️ Pause Ende')">
-        ▶️ PAUSE ENDE
-    </button>
+    <div class="buttons">
 
-    <button class="gehen" onclick="stempeln('🔴 Gehen')">
-        🔴 GEHEN
-    </button>
+        <button class="kommen"
+            onclick="stempeln('🟢 Kommen')">
 
-    <hr>
+            🟢<br>KOMMEN
 
-    <h2>Historie</h2>
+        </button>
 
-    <ul id="historie"></ul>
+        <button class="gehen"
+            onclick="stempeln('🔴 Gehen')">
 
-    <hr>
+            🔴<br>GEHEN
 
-    <button class="teilen" onclick="teilen()">
-        📤 Bericht teilen
-    </button>
+        </button>
 
-    <button class="neu" onclick="neuerTag()">
-        🗑 Neuer Tag
-    </button>
+        <button class="pauseStart"
+            onclick="stempeln('☕ Pause Start')">
+
+            ☕<br>PAUSE START
+
+        </button>
+
+        <button class="pauseEnde"
+            onclick="stempeln('▶️ Pause Ende')">
+
+            ▶️<br>PAUSE ENDE
+
+        </button>
+
+    </div>
+
+
+    <!-- Historie -->
+
+    <div class="card">
+
+        <h2>🕘 Historie</h2>
+
+        <ul id="historie"></ul>
+
+    </div>
+
+
+    <!-- Arbeitszeit -->
+
+    <div class="card">
+
+        <h2>Gesamtarbeitszeit</h2>
+
+        <div id="gesamtzeit">
+
+            00:00
+
+        </div>
+
+    </div>
+
+
+    <!-- Unten -->
+
+    <div class="buttons">
+
+        <button
+            class="teilen"
+            onclick="teilen()">
+
+            📤<br>Bericht teilen
+
+        </button>
+
+        <button
+            class="neu"
+            onclick="neuerTag()">
+
+            🗑<br>Neuer Tag
+
+        </button>
+
+    </div>
 
 </div>
+
 
 <script src="script.js"></script>
 
 <script>
+
 if ("serviceWorker" in navigator) {
+
     window.addEventListener("load", () => {
+
         navigator.serviceWorker.register("service-worker.js");
+
     });
+
 }
+
 </script>
-    
+
 </body>
 </html>
