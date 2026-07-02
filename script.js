@@ -1,209 +1,381 @@
-// ---------- Uhr ----------
-function updateClock() {
+// ===============================
+// Zeiterfassung V2
+// ===============================
+
+const nameInput = document.getElementById("name");
+const historieListe = document.getElementById("historie");
+const gesamtzeit = document.getElementById("gesamtzeit");
+
+const btnKommen = document.getElementById("btnKommen");
+const btnPauseStart = document.getElementById("btnPauseStart");
+const btnPauseEnde = document.getElementById("btnPauseEnde");
+const btnGehen = document.getElementById("btnGehen");
+
+let historie = JSON.parse(localStorage.getItem("historie")) || [];
+
+let status = localStorage.getItem("status") || "bereit";
+
+let startZeit = localStorage.getItem("startZeit");
+let pauseStart = localStorage.getItem("pauseStart");
+let pauseGesamt = Number(localStorage.getItem("pauseGesamt")) || 0;
+
+
+// Name laden
+
+nameInput.value = localStorage.getItem("mitarbeiter") || "";
+
+nameInput.oninput = () => {
+
+    localStorage.setItem("mitarbeiter", nameInput.value);
+
+};
+
+
+// Uhr
+
+setInterval(updateClock,1000);
+
+updateClock();
+
+setInterval(updateArbeitszeit,1000);
+
+anzeigen();
+
+updateButtons();
+
+
+// -------------------------------
+
+function updateClock(){
+
     const now = new Date();
 
     document.getElementById("datum").innerHTML =
-        "📅 " + now.toLocaleDateString("de-CH");
+        now.toLocaleDateString("de-CH");
 
     document.getElementById("uhr").innerHTML =
-        "🕒 " + now.toLocaleTimeString("de-CH");
+        now.toLocaleTimeString("de-CH");
+
 }
 
-setInterval(updateClock,1000);
-updateClock();
 
+// -------------------------------
 
-// ---------- Name ----------
-const nameInput=document.getElementById("name");
-
-nameInput.value=localStorage.getItem("mitarbeiter")||"";
-
-nameInput.addEventListener("input",()=>{
-    localStorage.setItem("mitarbeiter",nameInput.value);
-});
-
-
-// ---------- Daten ----------
-let historie=JSON.parse(localStorage.getItem("historie"))||[];
-
-let status=localStorage.getItem("status")||"";
-
-let startZeit=null;
-let pauseStart=null;
-let pauseMinuten=0;
-
-
-// Historie anzeigen
-anzeigen();
-
-
-// ---------- Stempeln ----------
 function stempeln(aktion){
 
-    const jetzt=new Date();
+    const jetzt = new Date();
 
-    const zeit=jetzt.toLocaleTimeString("de-CH",{
-        hour:"2-digit",
-        minute:"2-digit",
-        second:"2-digit"
-    });
+    const zeit = jetzt.toLocaleTimeString("de-CH");
 
     switch(aktion){
 
-        case "🟢 Kommen":
+        case "Kommen":
 
-            if(status!==""){
-                alert("Du bist bereits gekommen.");
-                return;
-            }
+            startZeit = jetzt.getTime();
 
-            status="arbeiten";
-            startZeit=jetzt.getTime();
+            status = "arbeiten";
 
         break;
 
 
-        case "☕ Pause Start":
+        case "Pause Start":
 
-            if(status!=="arbeiten"){
-                alert("Zuerst kommen.");
-                return;
-            }
+            pauseStart = jetzt.getTime();
 
-            status="pause";
-            pauseStart=jetzt.getTime();
+            status = "pause";
 
         break;
 
 
-        case "▶️ Pause Ende":
+        case "Pause Ende":
 
-            if(status!=="pause"){
-                alert("Keine Pause gestartet.");
-                return;
-            }
+            pauseGesamt +=
 
-            status="arbeiten";
+                Math.floor(
 
-            pauseMinuten+=Math.floor((jetzt.getTime()-pauseStart)/60000);
+                    (jetzt.getTime()-pauseStart)/1000
+
+                );
+
+            pauseStart = null;
+
+            status = "arbeiten";
 
         break;
 
 
-        case "🔴 Gehen":
+        case "Gehen":
 
-            if(status===""){
-                alert("Du musst zuerst kommen.");
-                return;
-            }
+            status = "fertig";
 
-            const ende=jetzt.getTime();
-
-            const arbeitsMinuten=Math.floor(
-                (ende-startZeit)/60000
-            )-pauseMinuten;
-
-            historie.push({
-                zeit:zeit,
-                aktion:aktion
-            });
-
-            historie.push({
-                zeit:"",
-                aktion:"Gesamtarbeitszeit: "+formatZeit(arbeitsMinuten)
-            });
-
-            status="";
-
-            speichern();
-
-            anzeigen();
-
-            return;
+        break;
 
     }
 
 
     historie.push({
+
         zeit:zeit,
+
         aktion:aktion
+
     });
+
 
     speichern();
 
     anzeigen();
 
-}
-
-
-
-// ---------- Speichern ----------
-function speichern(){
-
-    localStorage.setItem(
-        "historie",
-        JSON.stringify(historie)
-    );
-
-    localStorage.setItem(
-        "status",
-        status
-    );
+    updateButtons();
 
 }
 
 
+// -------------------------------
 
-// ---------- Anzeige ----------
 function anzeigen(){
 
-    const liste=document.getElementById("historie");
-
-    liste.innerHTML="";
+    historieListe.innerHTML="";
 
     historie.forEach(e=>{
 
-        const li=document.createElement("li");
+        let farbe="";
 
-        li.innerHTML="<strong>"+e.zeit+"</strong> "+e.aktion;
+        switch(e.aktion){
 
-        liste.appendChild(li);
+            case "Kommen":
+
+                farbe="green";
+
+            break;
+
+            case "Pause Start":
+
+                farbe="orange";
+
+            break;
+
+            case "Pause Ende":
+
+                farbe="dodgerblue";
+
+            break;
+
+            case "Gehen":
+
+                farbe="red";
+
+            break;
+
+        }
+
+        historieListe.innerHTML +=
+
+        `<li>
+
+            <span style="
+                display:inline-block;
+                width:12px;
+                height:12px;
+                border-radius:50%;
+                background:${farbe};
+                margin-right:15px;
+            "></span>
+
+            ${e.zeit}
+
+            &nbsp;&nbsp;
+
+            ${e.aktion}
+
+        </li>`;
 
     });
 
 }
 
 
+// -------------------------------
 
-// ---------- Minuten formatieren ----------
-function formatZeit(min){
+function updateArbeitszeit(){
 
-    const h=Math.floor(min/60);
+    if(!startZeit){
 
-    const m=min%60;
+        gesamtzeit.innerHTML="00:00";
 
-    return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0");
+        return;
+
+    }
+
+    let jetzt = Date.now();
+
+    let sekunden =
+
+        Math.floor(
+
+            (jetzt-startZeit)/1000
+
+        )-pauseGesamt;
+
+    if(status=="pause"){
+
+        sekunden -= Math.floor(
+
+            (jetzt-pauseStart)/1000
+
+        );
+
+    }
+
+    if(sekunden<0)
+
+        sekunden=0;
+
+    let h=Math.floor(sekunden/3600);
+
+    let m=Math.floor((sekunden%3600)/60);
+
+    gesamtzeit.innerHTML=
+
+        String(h).padStart(2,"0")
+
+        +":"
+
+        +String(m).padStart(2,"0");
 
 }
 
 
+// -------------------------------
 
-// ---------- Teilen ----------
+function updateButtons(){
+
+    btnKommen.disabled=false;
+    btnPauseStart.disabled=true;
+    btnPauseEnde.disabled=true;
+    btnGehen.disabled=true;
+
+    if(status=="arbeiten"){
+
+        btnKommen.disabled=true;
+        btnPauseStart.disabled=false;
+        btnGehen.disabled=false;
+
+    }
+
+    if(status=="pause"){
+
+        btnKommen.disabled=true;
+        btnPauseStart.disabled=true;
+        btnPauseEnde.disabled=false;
+
+    }
+
+    if(status=="fertig"){
+
+        btnKommen.disabled=true;
+        btnPauseStart.disabled=true;
+        btnPauseEnde.disabled=true;
+        btnGehen.disabled=true;
+
+    }
+
+}
+
+
+// -------------------------------
+
+function speichern(){
+
+    localStorage.setItem(
+
+        "historie",
+
+        JSON.stringify(historie)
+
+    );
+
+    localStorage.setItem(
+
+        "status",
+
+        status
+
+    );
+
+    localStorage.setItem(
+
+        "startZeit",
+
+        startZeit
+
+    );
+
+    localStorage.setItem(
+
+        "pauseStart",
+
+        pauseStart
+
+    );
+
+    localStorage.setItem(
+
+        "pauseGesamt",
+
+        pauseGesamt
+
+    );
+
+}
+
+
+// -------------------------------
+
+function neuerTag(){
+
+    if(!confirm("Neuen Tag beginnen?"))
+
+        return;
+
+    historie=[];
+
+    status="bereit";
+
+    startZeit=null;
+
+    pauseStart=null;
+
+    pauseGesamt=0;
+
+    localStorage.clear();
+
+    anzeigen();
+
+    updateButtons();
+
+    updateArbeitszeit();
+
+}
+
+
+// -------------------------------
+
 function teilen(){
-
-    const name=nameInput.value||"Mitarbeiter";
 
     let text="ZEITERFASSUNG\n\n";
 
-    text+="Name: "+name+"\n";
+    text+="Mitarbeiter: "+nameInput.value+"\n";
 
     text+="Datum: "+new Date().toLocaleDateString("de-CH")+"\n\n";
 
     historie.forEach(e=>{
 
-        text+=e.zeit+" "+e.aktion+"\n";
+        text+=e.zeit+"   "+e.aktion+"\n";
 
     });
+
+    text+="\nGesamtarbeitszeit: "+gesamtzeit.innerHTML;
 
     if(navigator.share){
 
@@ -219,34 +391,8 @@ function teilen(){
 
         navigator.clipboard.writeText(text);
 
-        alert("Bericht kopiert.");
+        alert("Bericht wurde kopiert.");
 
     }
-
-}
-
-
-
-// ---------- Neuer Tag ----------
-function neuerTag(){
-
-    if(!confirm("Neuen Tag beginnen?"))
-        return;
-
-    historie=[];
-
-    status="";
-
-    startZeit=null;
-
-    pauseStart=null;
-
-    pauseMinuten=0;
-
-    localStorage.removeItem("historie");
-
-    localStorage.removeItem("status");
-
-    anzeigen();
 
 }
